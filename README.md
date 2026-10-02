@@ -45,3 +45,11 @@ No analytics, third-party font requests, cookies, browser storage or form backen
 ## Accessibility
 
 Semantic sections, skip link, native modal dialogs, visible focus, labelled fields, form validation, keyboard-accessible controls, reduced-motion support and responsive layouts. Custom scripts use `textContent` for visitor data, not HTML insertion.
+
+## Private admin dashboard
+
+Visit `/admin` for the dashboard and invoicing app. Both `/admin/*` and the old `/invoicing/*` paths are served through `api/admin.js`, which checks a signed, secure HttpOnly session cookie. Invoicing files live in `private/`, outside the static build. The public marketing website is unchanged.
+
+In Vercel → Project Settings → Environment Variables, set `ADMIN_PASSWORD` to a unique strong password of at least 16 characters for Production (and Preview if needed), then redeploy. Never commit the password. The admin area returns a locked page until this value is configured. Sessions last 12 hours; changing the password invalidates all sessions. Login/logout POST requests require a matching Origin. Protected responses are not cached.
+
+This is a single-admin login. Documents remain in browser storage with backup/restore. Signing out protects access to the application but does not erase browser-local documents. Use a trusted device and browser profile. Existing browser drafts use the same storage key and are retained on the same domain. Historical Vercel deployments made before this protection should be removed or protected separately if they remain publicly reachable.
